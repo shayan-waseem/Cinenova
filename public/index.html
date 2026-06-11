@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Cinema Management System Admin Portal - Manage movies, bookings, food orders, and scheduling algorithms">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <title>CineAdmin | Cinema Management System</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Loading CineAdmin</div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <div class="app-layout">
+    <!-- ============================================
+         SIDEBAR
+         ============================================ -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">🎬</div>
+        <div class="brand-text">
+          <h2>CineAdmin</h2>
+          <span>Management Portal</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main Menu</div>
+        <div class="nav-item active" data-page="dashboard" id="nav-dashboard">
+          <span class="icon">📊</span>
+          <span>Dashboard</span>
+        </div>
+        <div class="nav-item" data-page="movies" id="nav-movies">
+          <span class="icon">🎬</span>
+          <span>Movies</span>
+        </div>
+        <div class="nav-item" data-page="shows" id="nav-shows">
+          <span class="icon">🎭</span>
+          <span>Shows</span>
+        </div>
+        <div class="nav-item" data-page="bookings" id="nav-bookings">
+          <span class="icon">🎫</span>
+          <span>Bookings</span>
+          <span class="nav-badge">6</span>
+        </div>
+
+        <div class="nav-section-title">Operations</div>
+        <div class="nav-item" data-page="food" id="nav-food">
+          <span class="icon">🍿</span>
+          <span>Food Orders</span>
+          <span class="nav-badge" id="badge-food">3</span>
+        </div>
+        <div class="nav-item" data-page="complaints" id="nav-complaints">
+          <span class="icon">📋</span>
+          <span>Complaints</span>
+          <span class="nav-badge" id="badge-complaints">4</span>
+        </div>
+        <div class="nav-item" data-page="auditoriums" id="nav-auditoriums">
+          <span class="icon">🏛️</span>
+          <span>Auditoriums</span>
+        </div>
+
+        <div class="nav-section-title">User Simulation</div>
+        <div class="nav-item" data-page="customer" id="nav-customer">
+          <span class="icon">📱</span>
+          <span>Simulate Customer</span>
+        </div>
+
+        <div class="nav-section-title">OS Scheduling</div>
+        <div class="nav-item" data-page="scheduling" id="nav-scheduling">
+          <span class="icon">⚡</span>
+          <span>Scheduling Algorithms</span>
+        </div>
+
+        <div class="nav-section-title">Reports</div>
+        <div class="nav-item" data-page="reports" id="nav-reports">
+          <span class="icon">📈</span>
+          <span>Analytics & Reports</span>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- ============================================
+         MAIN CONTENT
+         ============================================ -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+          <div>
+            <h1 id="pageTitle">Dashboard</h1>
+            <p id="pageSubtitle">Welcome back, Admin</p>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="header-search">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search movies, bookings..." id="searchInput" autocomplete="off">
+          </div>
+          <button class="header-btn" id="notificationBtn">
+            🔔
+            <span class="notification-dot"></span>
+          </button>
+          <button class="header-btn" id="settingsBtn">⚙️</button>
+          <div class="admin-avatar">A</div>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <div class="page-content">
+
+        <!-- ============================================
+             DASHBOARD PAGE
+             ============================================ -->
+        <section class="page-section active" id="page-dashboard">
+          <!-- Stats Grid -->
+          <div class="stats-grid" id="statsGrid">
+            <div class="stat-card indigo">
+              <div class="stat-header">
+                <div class="stat-icon">🎬</div>
+                <span class="stat-trend up">+12%</span>
+              </div>
+              <div class="stat-value" id="statMovies">0</div>
+              <div class="stat-label">Active Movies</div>
+            </div>
+            <div class="stat-card cyan">
+              <div class="stat-header">
+                <div class="stat-icon">🎫</div>
+                <span class="stat-trend up">+23%</span>
+              </div>
+              <div class="stat-value" id="statBookings">0</div>
+              <div class="stat-label">Total Bookings</div>
+            </div>
+            <div class="stat-card gold">
+              <div class="stat-header">
+                <div class="stat-icon">💰</div>
+                <span class="stat-trend up">+18%</span>
+              </div>
+              <div class="stat-value" id="statRevenue">0</div>
+              <div class="stat-label">Revenue (PKR)</div>
+            </div>
+            <div class="stat-card emerald">
+              <div class="stat-header">
+                <div class="stat-icon">🍿</div>
+                <span class="stat-trend up">+8%</span>
+              </div>
+              <div class="stat-value" id="statFood">0</div>
+              <div class="stat-label">Food Orders</div>
+            </div>
+            <div class="stat-card rose">
+              <div class="stat-header">
+                <div class="stat-icon">📋</div>
+                <span class="stat-trend down">-5%</span>
+              </div>
+              <div class="stat-value" id="statComplaints">0</div>
+              <div class="stat-label">Open Complaints</div>
+            </div>
+            <div class="stat-card sky">
+              <div class="stat-header">
+                <div class="stat-icon">🏛️</div>
+                <span class="stat-trend up">+2</span>
+              </div>
+              <div class="stat-value" id="statShows">0</div>
+              <div class="stat-label">Active Shows</div>
+            </div>
+          </div>
+
+          <!-- Charts -->
+          <div class="charts-grid">
+            <div class="chart-card">
+              <div class="chart-title">
+                <span class="dot"></span> Weekly Revenue Trend
+              </div>
+              <div class="bar-chart" id="barChart"></div>
+            </div>
+            <div class="chart-card">
+              <div class="chart-title">
+                <span class="dot"></span> Customer Distribution
+              </div>
+              <div class="donut-chart-container" id="donutChart"></div>
+            </div>
+          </div>
+
+          <!-- Recent Bookings -->
+          <div class="table-card">
+            <div class="table-header">
+              <h3>🎫 Recent Bookings</h3>
+              <div class="table-actions">
+                <button class="btn btn-secondary" id="refreshBookingsBtn">↻ Refresh</button>
+              </div>
+            </div>
+            <table class="data-table" id="recentBookingsTable">
+              <thead>
+                <tr>
+                  <th>Booking ID</th>
+                  <th>Customer</th>
+                  <th>Movie</th>
+                  <th>Seat</th>
+                  <th>Type</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody id="recentBookingsBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ============================================
+             MOVIES PAGE
+             ============================================ -->
+        <section class="page-section" id="page-movies">
+          <div class="section-header">
+            <h2>🎬 Movie Management</h2>
+            <button class="btn btn-primary" id="addMovieBtn">+ Add Movie</button>
+          </div>
+          <div class="movies-grid" id="moviesGrid"></div>
+        </section>
+
+        <!-- ============================================
+             SHOWS PAGE
+             ============================================ -->
+        <section class="page-section" id="page-shows">
+          <div class="section-header">
+            <h2>🎭 Show Management</h2>
+            <button class="btn btn-primary" id="addShowBtn">+ Add Show</button>
+          </div>
+          <div class="table-card">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Show ID</th>
+                  <th>Movie</th>
+                  <th>Hall</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Booked</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="showsBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ============================================
+             BOOKINGS PAGE
+             ============================================ -->
+        <section class="page-section" id="page-bookings">
+          <div class="section-header">
+            <h2>🎫 Booking Management</h2>
+            <div class="header-actions">
+              <select id="bookingAlgoSelect" class="header-select">
+                <option value="fcfs">FCFS (First Come First Serve)</option>
+                <option value="priority">Priority Scheduling (VIP First)</option>
+                <option value="rr">Round Robin (Peak Traffic)</option>
+              </select>
+              <input type="number" id="bookingQuantum" value="3" min="1" max="10" class="header-input" style="display:none; width: 60px;" placeholder="Q">
+              <button class="btn btn-primary" id="runBookingSchedulingBtn">⚡ Run Bookings Scheduler</button>
+              <button class="btn btn-secondary" id="exportBookingsBtn">📥 Export</button>
+            </div>
+          </div>
+          <div class="table-card">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Booking ID</th>
+                  <th>Customer</th>
+                  <th>Movie</th>
+                  <th>Seat</th>
+                  <th>Type</th>
+                  <th>Arrival Time</th>
+                  <th>Order</th>
+                </tr>
+              </thead>
+              <tbody id="bookingsBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ============================================
+             FOOD ORDERS PAGE
+             ============================================ -->
+        <section class="page-section" id="page-food">
+          <div class="section-header">
+            <h2>🍿 Food Order Management</h2>
+            <div class="header-actions">
+              <select id="foodAlgoSelect" class="header-select">
+                <option value="sjf">SJF (Shortest Prep First)</option>
+                <option value="sjf-preemptive">Preemptive SJF (SRTF)</option>
+                <option value="priority">Priority Kitchen</option>
+                <option value="priority-preemptive">Preemptive Priority Kitchen</option>
+                <option value="rr">Round Robin Kitchen</option>
+              </select>
+              <input type="number" id="foodQuantum" value="5" min="1" max="20" class="header-input" style="display:none; width: 60px;" placeholder="Q">
+              <button class="btn btn-primary" id="runFoodSchedulingBtn">⚡ Run Kitchen Scheduler</button>
+            </div>
+          </div>
+
+          <div class="food-grid" id="foodMenuGrid">
+            <div class="food-item"><div class="food-emoji">🍿</div><div class="food-name">Popcorn</div><div class="food-prep">Prep: 3 min</div></div>
+            <div class="food-item"><div class="food-emoji">🥤</div><div class="food-name">Cold Drink</div><div class="food-prep">Prep: 1 min</div></div>
+            <div class="food-item"><div class="food-emoji">🍔</div><div class="food-name">Burger</div><div class="food-prep">Prep: 8 min</div></div>
+            <div class="food-item"><div class="food-emoji">🌮</div><div class="food-name">Nachos</div><div class="food-prep">Prep: 5 min</div></div>
+            <div class="food-item"><div class="food-emoji">🍕</div><div class="food-name">Pizza</div><div class="food-prep">Prep: 12 min</div></div>
+            <div class="food-item"><div class="food-emoji">🌭</div><div class="food-name">Hot Dog</div><div class="food-prep">Prep: 6 min</div></div>
+          </div>
+
+          <div class="table-card" style="margin-top: 24px;">
+            <div class="table-header">
+              <h3>📋 Active Orders</h3>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Items</th>
+                  <th>Prep Time</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="foodOrdersBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ============================================
+             COMPLAINTS PAGE
+             ============================================ -->
+        <section class="page-section" id="page-complaints">
+          <div class="section-header">
+            <h2>📋 Complaint Management</h2>
+            <div class="header-actions">
+              <select id="complaintAlgoSelect" class="header-select">
+                <option value="priority">Priority Support (Critical First)</option>
+                <option value="fcfs">FCFS Support (FIFO)</option>
+                <option value="rr">Round Robin Support</option>
+              </select>
+              <input type="number" id="complaintQuantum" value="10" min="1" max="30" class="header-input" style="display:none; width: 60px;" placeholder="Q">
+              <button class="btn btn-primary" id="runComplaintSchedulingBtn">⚡ Run Support Scheduler</button>
+            </div>
+          </div>
+          <div class="table-card">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Customer</th>
+                  <th>Type</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Submitted</th>
+                </tr>
+              </thead>
+              <tbody id="complaintsBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ============================================
+             AUDITORIUMS PAGE
+             ============================================ -->
+        <section class="page-section" id="page-auditoriums">
+          <div class="section-header">
+            <h2>🏛️ Auditorium Management</h2>
+            <div class="header-actions">
+              <select id="cleaningAlgoSelect" class="header-select">
+                <option value="sjf">SJF Cleaning (Shortest Cleaning First)</option>
+                <option value="fcfs">FCFS Cleaning (Order Finished)</option>
+                <option value="rr">Round Robin Cleaning (Workload Balanced)</option>
+              </select>
+              <input type="number" id="cleaningQuantum" value="10" min="1" max="30" class="header-input" style="display:none; width: 60px;" placeholder="Q">
+              <button class="btn btn-primary" id="runCleaningScheduleBtn">⚡ Run Cleaning Scheduler</button>
+            </div>
+          </div>
+          <div class="halls-grid" id="hallsGrid"></div>
+        </section>
+
+        <!-- ============================================
+             CUSTOMER SIMULATION PORTAL
+             ============================================ -->
+        <section class="page-section" id="page-customer">
+          <div class="customer-portal-layout">
+            
+            <!-- Virtual Smartphone -->
+            <div class="smartphone-mockup">
+              <div class="phone-speaker"></div>
+              <div class="phone-screen">
+                <div class="phone-header">
+                  <span class="phone-brand">CinePass Mobile</span>
+                  <span class="phone-status">LTE 🔋 98%</span>
+                </div>
+                
+                <!-- Phone App Tabs -->
+                <div class="phone-tabs">
+                  <button class="phone-tab active" data-tab="ticket-tab" id="btn-tab-ticket">🎫 Book</button>
+                  <button class="phone-tab" data-tab="food-tab" id="btn-tab-food">🍿 Food</button>
+                  <button class="phone-tab" data-tab="support-tab" id="btn-tab-support">📋 Support</button>
+                </div>
+
+                <!-- Phone Body Scroll -->
+                <div class="phone-app-body">
+                  <!-- Book Tickets Screen -->
+                  <div class="phone-screen-content active" id="ticket-tab">
+                    <h3>🎬 Book Show Tickets</h3>
+                    <form id="phoneBookingForm">
+                      <div class="form-group">
+                        <label for="phoneCustName">Your Name</label>
+                        <input type="text" id="phoneCustName" required placeholder="Enter your name">
+                      </div>
+
+                      <div class="form-group">
+                        <label for="phoneMovieSelect">Select Movie</label>
+                        <select id="phoneMovieSelect" required>
+                          <option value="">-- Choose Movie --</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="phoneShowSelect">Select Show</label>
+                        <select id="phoneShowSelect" required disabled>
+                          <option value="">-- Select Show Timing --</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <label>Select Seat</label>
+                        <div class="seat-map-container">
+                          <div class="screen-indicator">SCREEN</div>
+                          <div class="phone-seat-grid" id="phoneSeatGrid"></div>
+                          <div class="seat-legend">
+                            <span class="legend-i"><span class="seat-dot available"></span> Avail</span>
+                            <span class="legend-i"><span class="seat-dot selected"></span> Select</span>
+                            <span class="legend-i"><span class="seat-dot booked"></span> Taken</span>
+                          </div>
+                        </div>
+                        <input type="hidden" id="phoneSelectedSeat" required>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="phoneBookingType">Ticket Category</label>
+                        <select id="phoneBookingType" required>
+                          <option value="Regular">Regular (Standard Priority)</option>
+                          <option value="Premium">Premium (Medium Priority)</option>
+                          <option value="VIP">VIP (High Priority)</option>
+                        </select>
+                      </div>
+
+                      <button type="submit" class="btn btn-primary btn-block">Confirm Ticket Booking</button>
+                    </form>
+                  </div>
+
+                  <!-- Order Food Screen -->
+                  <div class="phone-screen-content" id="food-tab">
+                    <h3>🍿 Order Movie Snacks</h3>
+                    <form id="phoneFoodForm">
+                      <div class="form-group">
+                        <label for="phoneFoodCustName">Your Name</label>
+                        <input type="text" id="phoneFoodCustName" required placeholder="Enter name">
+                      </div>
+
+                      <div class="form-group">
+                        <label>Select Items</label>
+                        <div class="food-menu-list">
+                          <div class="food-menu-row" data-name="Popcorn" data-prep="3">
+                            <span>🍿 Popcorn (Prep: 3m)</span>
+                            <input type="checkbox" name="foodItem" value="Popcorn">
+                          </div>
+                          <div class="food-menu-row" data-name="Cold Drink" data-prep="1">
+                            <span>🥤 Cold Drink (Prep: 1m)</span>
+                            <input type="checkbox" name="foodItem" value="Cold Drink">
+                          </div>
+                          <div class="food-menu-row" data-name="Cheese Burger" data-prep="8">
+                            <span>🍔 Burger (Prep: 8m)</span>
+                            <input type="checkbox" name="foodItem" value="Cheese Burger">
+                          </div>
+                          <div class="food-menu-row" data-name="Pizza Slice" data-prep="12">
+                            <span>🍕 Pizza Slice (Prep: 12m)</span>
+                            <input type="checkbox" name="foodItem" value="Pizza Slice">
+                          </div>
+                          <div class="food-menu-row" data-name="Nachos" data-prep="5">
+                            <span>🌮 Nachos + Dip (Prep: 5m)</span>
+                            <input type="checkbox" name="foodItem" value="Nachos">
+                          </div>
+                          <div class="food-menu-row" data-name="Hot Dog" data-prep="6">
+                            <span>🌭 Hot Dog (Prep: 6m)</span>
+                            <input type="checkbox" name="foodItem" value="Hot Dog">
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="phoneFoodPriority">Service Priority</label>
+                        <select id="phoneFoodPriority" required>
+                          <option value="Regular">Regular</option>
+                          <option value="Premium">Premium</option>
+                          <option value="VIP">VIP Lounge Access</option>
+                        </select>
+                      </div>
+
+                      <button type="submit" class="btn btn-primary btn-block">Place Food Order</button>
+                    </form>
+                  </div>
+
+                  <!-- File Complaint Screen -->
+                  <div class="phone-screen-content" id="support-tab">
+                    <h3>📋 Customer Support</h3>
+                    <form id="phoneComplaintForm">
+                      <div class="form-group">
+                        <label for="phoneCompCustName">Your Name</label>
+                        <input type="text" id="phoneCompCustName" required placeholder="Enter name">
+                      </div>
+
+                      <div class="form-group">
+                        <label for="phoneCompType">Issue Category</label>
+                        <select id="phoneCompType" required>
+                          <option value="Payment Failure">Payment Failure</option>
+                          <option value="Refund Request">Refund Request</option>
+                          <option value="Ticket Cancellation">Ticket Cancellation</option>
+                          <option value="Seat Issue">Seat Issue</option>
+                          <option value="App Bug">App Bug</option>
+                          <option value="General Query">General Query</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="phoneCompPriority">Priority Tag</label>
+                        <select id="phoneCompPriority" required>
+                          <option value="Low">Low Priority</option>
+                          <option value="Medium">Medium Priority</option>
+                          <option value="Critical">Critical (Escalated)</option>
+                        </select>
+                      </div>
+
+                      <button type="submit" class="btn btn-primary btn-block">Submit Support Ticket</button>
+                    </form>
+                  </div>
+                </div> <!-- /phone-app-body -->
+              </div> <!-- /phone-screen -->
+              <div class="phone-home-btn"></div>
+            </div> <!-- /smartphone-mockup -->
+
+            <!-- Active Simulation Queue Preview -->
+            <div class="simulation-queues-panel">
+              <div class="sim-panel-header">
+                <h3>⚡ Real-Time Simulation Queues</h3>
+                <span class="pulse-dot"></span>
+              </div>
+              <p class="sim-panel-subtitle">Items queued below accumulate from customer submissions and are processed when scheduling algorithms run.</p>
+              
+              <div class="sim-queues-grid">
+                <!-- Bookings Queue -->
+                <div class="sim-queue-card">
+                  <div class="queue-card-header">
+                    <span>🎫 Pending Bookings</span>
+                    <span class="queue-count-badge" id="sim-booking-count">0</span>
+                  </div>
+                  <div class="queue-items-container" id="sim-bookings-list">
+                    <div class="empty-queue-text">No pending bookings</div>
+                  </div>
+                </div>
+
+                <!-- Food Queue -->
+                <div class="sim-queue-card">
+                  <div class="queue-card-header">
+                    <span>🍿 Food & Kitchen Orders</span>
+                    <span class="queue-count-badge" id="sim-food-count">0</span>
+                  </div>
+                  <div class="queue-items-container" id="sim-food-list">
+                    <div class="empty-queue-text">No pending orders</div>
+                  </div>
+                </div>
+
+                <!-- Complaints Queue -->
+                <div class="sim-queue-card">
+                  <div class="queue-card-header">
+                    <span>📋 Customer Support Cases</span>
+                    <span class="queue-count-badge" id="sim-complaint-count">0</span>
+                  </div>
+                  <div class="queue-items-container" id="sim-complaints-list">
+                    <div class="empty-queue-text">No pending issues</div>
+                  </div>
+                </div>
+              </div>
+            </div> <!-- /simulation-queues-panel -->
+
+          </div>
+        </section>
+
+        <!-- ============================================
+             SCHEDULING PAGE
+             ============================================ -->
+        <section class="page-section" id="page-scheduling">
+          <div class="section-header">
+            <h2>⚡ OS Scheduling Algorithms</h2>
+            <button class="btn btn-primary" id="runDemoBtn">🚀 Run Full Demo</button>
+          </div>
+
+          <div class="scheduling-controls" id="schedulingControls">
+            <button class="algo-btn active" data-algo="fcfs" id="btn-fcfs">FCFS</button>
+            <button class="algo-btn" data-algo="sjf" id="btn-sjf">SJF</button>
+            <button class="algo-btn" data-algo="priority" id="btn-priority">Priority</button>
+            <button class="algo-btn" data-algo="rr" id="btn-rr">Round Robin</button>
+          </div>
+
+          <!-- Algorithm Info Cards -->
+          <div class="stats-grid" style="margin-bottom: 24px;">
+            <div class="stat-card indigo">
+              <div class="stat-header"><div class="stat-icon">📥</div></div>
+              <div class="stat-value" style="font-size:18px;">FCFS</div>
+              <div class="stat-label">Ticket Booking Queue</div>
+            </div>
+            <div class="stat-card cyan">
+              <div class="stat-header"><div class="stat-icon">⚡</div></div>
+              <div class="stat-value" style="font-size:18px;">SJF</div>
+              <div class="stat-label">Food Order Processing</div>
+            </div>
+            <div class="stat-card gold">
+              <div class="stat-header"><div class="stat-icon">👑</div></div>
+              <div class="stat-value" style="font-size:18px;">Priority</div>
+              <div class="stat-label">Complaint Handling</div>
+            </div>
+            <div class="stat-card emerald">
+              <div class="stat-header"><div class="stat-icon">🔄</div></div>
+              <div class="stat-value" style="font-size:18px;">Round Robin</div>
+              <div class="stat-label">Hall Cleaning Schedule</div>
+            </div>
+          </div>
+
+          <!-- Gantt Chart Visualization -->
+          <div class="gantt-chart" id="ganttChartSection">
+            <div class="gantt-title">
+              <span>Scheduling Visualization</span>
+              <span class="algo-tag" id="currentAlgoTag">FCFS</span>
+            </div>
+            <div class="gantt-container" id="ganttContainer">
+              <div class="empty-state">
+                <div class="icon">🚀</div>
+                <h3>Click "Run Full Demo" to visualize</h3>
+                <p>Select an algorithm and run the demo to see the Gantt chart</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Results -->
+          <div class="scheduling-results" id="schedulingResults" style="display:none;"></div>
+        </section>
+
+        <!-- ============================================
+             REPORTS PAGE
+             ============================================ -->
+        <section class="page-section" id="page-reports">
+          <div class="section-header">
+            <h2>📈 Analytics & Reports</h2>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card indigo">
+              <div class="stat-header"><div class="stat-icon">📊</div></div>
+              <div class="stat-value">Rs 285K</div>
+              <div class="stat-label">Monthly Revenue</div>
+            </div>
+            <div class="stat-card emerald">
+              <div class="stat-header"><div class="stat-icon">🎫</div></div>
+              <div class="stat-value">1,247</div>
+              <div class="stat-label">Tickets Sold (Month)</div>
+            </div>
+            <div class="stat-card gold">
+              <div class="stat-header"><div class="stat-icon">🍿</div></div>
+              <div class="stat-value">856</div>
+              <div class="stat-label">Food Orders (Month)</div>
+            </div>
+            <div class="stat-card cyan">
+              <div class="stat-header"><div class="stat-icon">⭐</div></div>
+              <div class="stat-value">4.6</div>
+              <div class="stat-label">Customer Rating</div>
+            </div>
+          </div>
+
+          <!-- Report Charts -->
+          <div class="charts-grid">
+            <div class="chart-card">
+              <div class="chart-title">
+                <span class="dot"></span> Monthly Ticket Sales
+              </div>
+              <div class="bar-chart" id="reportBarChart"></div>
+            </div>
+            <div class="chart-card">
+              <div class="chart-title">
+                <span class="dot"></span> Genre Distribution
+              </div>
+              <div class="donut-chart-container" id="genreDonut"></div>
+            </div>
+          </div>
+
+          <!-- Scheduling Analytics -->
+          <div class="table-card">
+            <div class="table-header">
+              <h3>⚡ Scheduling Performance Report</h3>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Department</th>
+                  <th>Algorithm</th>
+                  <th>Avg Wait Time</th>
+                  <th>Avg Turnaround</th>
+                  <th>Throughput</th>
+                  <th>Efficiency</th>
+                </tr>
+              </thead>
+              <tbody id="schedulingReportBody">
+                <tr>
+                  <td>🎫 Ticket Booking</td>
+                  <td><span class="badge badge-info"><span class="badge-dot"></span> FCFS</span></td>
+                  <td>4.2 min</td>
+                  <td>7.8 min</td>
+                  <td>12/hr</td>
+                  <td><span class="badge badge-success"><span class="badge-dot"></span> 94%</span></td>
+                </tr>
+                <tr>
+                  <td>🍿 Food Orders</td>
+                  <td><span class="badge badge-info"><span class="badge-dot"></span> SJF</span></td>
+                  <td>2.8 min</td>
+                  <td>5.2 min</td>
+                  <td>18/hr</td>
+                  <td><span class="badge badge-success"><span class="badge-dot"></span> 97%</span></td>
+                </tr>
+                <tr>
+                  <td>📋 Complaints</td>
+                  <td><span class="badge badge-info"><span class="badge-dot"></span> Priority</span></td>
+                  <td>3.5 min</td>
+                  <td>8.1 min</td>
+                  <td>8/hr</td>
+                  <td><span class="badge badge-warning"><span class="badge-dot"></span> 89%</span></td>
+                </tr>
+                <tr>
+                  <td>🏛️ Hall Cleaning</td>
+                  <td><span class="badge badge-info"><span class="badge-dot"></span> Round Robin</span></td>
+                  <td>6.0 min</td>
+                  <td>12.5 min</td>
+                  <td>4/hr</td>
+                  <td><span class="badge badge-success"><span class="badge-dot"></span> 92%</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div> <!-- /page-content -->
+    </main>
+  </div> <!-- /app-layout -->
+
+  <!-- ============================================
+       MODALS
+       ============================================ -->
+  <!-- Add Movie Modal -->
+  <div class="modal" id="addMovieModal">
+    <div class="modal-content glass">
+      <div class="modal-header">
+        <h3>🎬 Add New Movie</h3>
+        <button class="modal-close" id="closeMovieModalBtn">&times;</button>
+      </div>
+      <form id="addMovieForm" class="modal-form">
+        <div class="form-group">
+          <label for="movieTitleInput">Movie Title</label>
+          <input type="text" id="movieTitleInput" required placeholder="e.g. Tenet">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="movieDurationInput">Duration (mins)</label>
+            <input type="number" id="movieDurationInput" required min="1" value="120">
+          </div>
+          <div class="form-group">
+            <label for="movieGenreInput">Genre</label>
+            <input type="text" id="movieGenreInput" required placeholder="e.g. Sci-Fi">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="movieRatingInput">Rating</label>
+            <input type="number" id="movieRatingInput" required step="0.1" min="1" max="10" value="8.0">
+          </div>
+          <div class="form-group">
+            <label for="moviePosterInput">Poster Emoji</label>
+            <input type="text" id="moviePosterInput" required value="🎬" placeholder="e.g. 🌀">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="movieStatusInput">Status</label>
+          <select id="movieStatusInput" required>
+            <option value="Now Showing">Now Showing</option>
+            <option value="Coming Soon">Coming Soon</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelMovieBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Movie</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Show Modal -->
+  <div class="modal" id="addShowModal">
+    <div class="modal-content glass">
+      <div class="modal-header">
+        <h3>🎭 Add New Show</h3>
+        <button class="modal-close" id="closeShowModalBtn">&times;</button>
+      </div>
+      <form id="addShowForm" class="modal-form">
+        <div class="form-group">
+          <label for="showMovieSelect">Select Movie</label>
+          <select id="showMovieSelect" required>
+            <option value="">-- Choose Movie --</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="showHallSelect">Select Auditorium</label>
+          <select id="showHallSelect" required>
+            <option value="">-- Choose Auditorium --</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="showDateInput">Show Date</label>
+            <input type="date" id="showDateInput" required>
+          </div>
+          <div class="form-group">
+            <label for="showTimeInput">Show Time</label>
+            <input type="text" id="showTimeInput" required placeholder="e.g. 07:00 PM">
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelShowBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Show</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
